@@ -2,7 +2,7 @@ Proyecto Diplomado Internet de las Cosas
 
 Integrantes:
 
-- Cynthia Claudia Coellar Castillo
+- Cynthia Claudia Cuellar Castillo
 - José Manuel Cartas Sánchez
 - Gonzalo Antonio Sosa Malaga
 
