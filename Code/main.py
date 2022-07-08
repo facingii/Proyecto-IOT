@@ -3,6 +3,7 @@
 from comm import broker
 from sensors import dht11
 
+import os
 import json
 import datetime
 import configparser
@@ -14,8 +15,9 @@ MQTT_CLIENT = ''
 CONTAINER_ID = ''
 
 def setup ():
+	config_file_path = os.path.join (os.path.dirname (__file__), 'conf', 'config.ini')
 	config = configparser.ConfigParser ()
-	config.read ('config.ini')
+	config.read (config_file_path)
 
 	global MQTT_HOST
 	MQTT_HOST = config ['MQTT']['HOST']
