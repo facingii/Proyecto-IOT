@@ -88,8 +88,10 @@ if __name__ == "__main__":
 			'status': 'ok', 
 			'geo': {'latitude': geo_point ['latitude'], 'longitude': geo_point ['longitude']}}
 
+	#after each temperature read that value is compared against temperature threshold
+	#and an alarm is triggered accordingly to it
 	if temp < TEMP_MIN or temp > TEMP_MAX:
-		command ['alarm': 'on']
+		command ['alarm'] = 'on'
 		data ['status'] = 'failed'
 	
 	mqtt.publish (MQTT_TOPIC_COMMAND, json.dumps (command))
