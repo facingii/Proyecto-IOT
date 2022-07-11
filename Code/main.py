@@ -4,18 +4,22 @@ from comm import broker
 from sensors import dht11, gps
 
 import os
+import time
 import json
 import datetime
 import configparser
 
 MQTT_HOST = ''
 MQTT_PORT = 0
-MQTT_TOPIC = ''
+MQTT_TOPIC_DATA = ''
+MQTT_TOPIC_COMMAND = ''
 MQTT_CLIENT = ''
 GPS_PORT = 0
 GPS_BAUD = 0
 GPS_TIMEOUT = 0
 CONTAINER_ID = ''
+TEMP_MIN = 0
+TEMP_MAX = 0
 
 '''
 Setting up environment variables
@@ -31,8 +35,11 @@ def setup ():
 	global MQTT_PORT
 	MQTT_PORT = int (config ['MQTT']['PORT'])
 
-	global MQTT_TOPIC
-	MQTT_TOPIC = config ['MQTT']['TOPIC']
+	global MQTT_TOPIC_DATA
+	MQTT_TOPIC_DATA = config ['MQTT']['TOPIC']
+
+	global MQTT_TOPIC_COMMAND
+	MQTT_TOPIC_COMMAND = config ['MQTT']['COMMAND']
 	
 	global MQTT_CLIENT
 	MQTT_CLIENT = config ['MQTT']['CLIENT']
@@ -48,6 +55,12 @@ def setup ():
 
 	global CONTAINER_ID
 	CONTAINER_ID = int (config ['CONTAINER']['ID'])
+
+	global TEMP_MIN
+	TEMP_MIN = int (config ['TEMPERATURE']['MIN'])
+
+	global TEMP_MAX
+	TEMP_MAX = int (config ['TEMPERATURE']['MAX'])
 
 '''
 Application entry point
@@ -66,9 +79,19 @@ if __name__ == "__main__":
 	dt = datetime.datetime.now ()
 	
 	#building message to send via MQTT
+
+	command = {'alarm': 'off'}
+
 	data = {'containerId': CONTAINER_ID, 'temperature': temp, 
 			'humidity': humidity, 
-			'timestamp': dt.__str__(), 
+			'timestamp': dt.__str__(),
+			'status': 'ok', 
 			'geo': {'latitude': geo_point ['latitude'], 'longitude': geo_point ['longitude']}}
 
-	mqtt.publish (MQTT_TOPIC, json.dumps (data))
+	if temp < TEMP_MIN or temp > TEMP_MAX:
+		command ['alarm': 'on']
+		data ['status'] = 'failed'
+	
+	mqtt.publish (MQTT_TOPIC_COMMAND, json.dumps (command))
+	time.sleep (0.3)
+	mqtt.publish (MQTT_TOPIC_DATA, json.dumps (data))
