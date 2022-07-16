@@ -3,12 +3,6 @@
 #MQTT Client
 import paho.mqtt.client as mqtt
 
-MQTT_HOST = 'broker.hivemq.com'
-MQTT_PORT = 1883
-MQTT_KEEPALIVE_INTERVAL = 45
-MQTT_TOPIC = "capstone/team15/temperature"
-MQTT_MSG = ""
-
 '''
 Helper to handle connection to MQTT broker
 '''
@@ -26,4 +20,5 @@ class MQTT:
 	Send message to broker using topic indicated 
 	'''
 	def publish (self, topic, message):
+		print ("publishing to ", topic)
 		return self.client.publish (topic, message).is_published ()

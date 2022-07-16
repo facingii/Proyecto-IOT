@@ -76,7 +76,6 @@ if __name__ == "__main__":
 
 	#reading temperature data
 	sensor = dht11.Temperature ()
-	mqtt = broker.MQTT (MQTT_CLIENT, MQTT_HOST, MQTT_PORT)
 	(temp, humidity) = sensor.get ()
 
 	#reading geo point
@@ -99,15 +98,18 @@ if __name__ == "__main__":
 		command ['alarm'] = 'on'
 		data ['status'] = 'failed'
 	
-	#send commnd 
-	mqtt.publish (MQTT_TOPIC_COMMAND, json.dumps (command))
-	time.sleep (0.3)
-
 	try:
+		mqtt = broker.MQTT (MQTT_CLIENT, MQTT_HOST, MQTT_PORT)
+		#send commnd 
 		mqtt.publish (MQTT_TOPIC_DATA, json.dumps (data))
-	except:
+		time.sleep (0.4)
+		mqtt.publish (MQTT_TOPIC_COMMAND, json.dumps (command))
+	except Exception as e:
 		#if data wasn't sent to broker it is storage into local db
 		db_filepath = os.path.join (os.path.dirname (__file__), 'data', DB_FILENAME)
 		persistance = db.Persistance (db_filepath)
 		persistance.insert (data)
 		persistance.close ()
+
+		raise e
+
