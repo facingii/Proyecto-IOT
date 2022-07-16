@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from comm import broker
 from sensors import dht11, gps
+from db import db
 
 import os
 import time
@@ -20,6 +22,7 @@ GPS_TIMEOUT = 0
 CONTAINER_ID = ''
 TEMP_MIN = 0
 TEMP_MAX = 0
+DB_FILENAME = ''
 
 '''
 Setting up environment variables
@@ -54,13 +57,16 @@ def setup ():
 	GPS_TIMEOUT = float (config ['GPS']['TIMEOUT'])
 
 	global CONTAINER_ID
-	CONTAINER_ID = int (config ['CONTAINER']['ID'])
+	CONTAINER_ID =  (config ['CONTAINER']['ID'])
 
 	global TEMP_MIN
 	TEMP_MIN = int (config ['TEMPERATURE']['MIN'])
 
 	global TEMP_MAX
 	TEMP_MAX = int (config ['TEMPERATURE']['MAX'])
+
+	global DB_FILENAME
+	DB_FILENAME = config ['DATABASE']['FILENAME']
 
 '''
 Application entry point
@@ -78,8 +84,7 @@ if __name__ == "__main__":
 	geo_point = geo.get ()
 	dt = datetime.datetime.now ()
 	
-	#building message to send via MQTT
-
+	#build messages to send via MQTT
 	command = {'alarm': 'off'}
 
 	data = {'containerId': CONTAINER_ID, 'temperature': temp, 
@@ -94,6 +99,15 @@ if __name__ == "__main__":
 		command ['alarm'] = 'on'
 		data ['status'] = 'failed'
 	
+	#send commnd 
 	mqtt.publish (MQTT_TOPIC_COMMAND, json.dumps (command))
 	time.sleep (0.3)
-	mqtt.publish (MQTT_TOPIC_DATA, json.dumps (data))
+
+	try:
+		mqtt.publish (MQTT_TOPIC_DATA, json.dumps (data))
+	except:
+		#if data wasn't sent to broker it is storage into local db
+		db_filepath = os.path.join (os.path.dirname (__file__), 'data', DB_FILENAME)
+		persistance = db.Persistance (db_filepath)
+		persistance.insert (data)
+		persistance.close ()

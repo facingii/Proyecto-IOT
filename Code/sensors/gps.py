@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+from lib2to3.pgen2.parse import ParseError
 import pynmea2
 import serial
 
@@ -24,6 +27,8 @@ class Geo:
 
 					return geo_point
 			except UnicodeDecodeError: #this error is expected when data doesn't contain parseable chars
+				pass
+			except ParseError:
 				pass
 			except Exception as error:
 				raise error

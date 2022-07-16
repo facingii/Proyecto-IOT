@@ -1,7 +1,6 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #MQTT Client
-import time
 import paho.mqtt.client as mqtt
 
 MQTT_HOST = 'broker.hivemq.com'
