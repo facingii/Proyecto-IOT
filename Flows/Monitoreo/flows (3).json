@@ -1,0 +1,619 @@
+[
+    {
+        "id": "882601455df05437",
+        "type": "tab",
+        "label": "Containers",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d6c9c5419f03dd9c",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Censado Temperatura",
+        "func": "msg.payload = msg.payload.temperature;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 80,
+        "wires": [
+            [
+                "6eff1223bde92e12"
+            ]
+        ]
+    },
+    {
+        "id": "a7a7673af60e8b25",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Censado Humedad",
+        "func": "msg.payload=msg.payload.humidity;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 140,
+        "wires": [
+            [
+                "acab8da84c19fe59"
+            ]
+        ]
+    },
+    {
+        "id": "18d923918cb9e2f2",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Historial Censado",
+        "func": "msg.payload = msg.payload.temperature;\nmsg.topic = msg.payload.containerId;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 200,
+        "wires": [
+            [
+                "8f09646668ca7417"
+            ]
+        ]
+    },
+    {
+        "id": "6eff1223bde92e12",
+        "type": "ui_gauge",
+        "z": "882601455df05437",
+        "name": "",
+        "group": "5552fc151fea2732",
+        "order": 2,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "ºC",
+        "format": "{{value}}",
+        "min": "-5",
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "0",
+        "seg2": "5",
+        "x": 850,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "acab8da84c19fe59",
+        "type": "ui_gauge",
+        "z": "882601455df05437",
+        "name": "",
+        "group": "5552fc151fea2732",
+        "order": 3,
+        "width": "5",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "50",
+        "seg2": "80",
+        "x": 840,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "8f09646668ca7417",
+        "type": "ui_chart",
+        "z": "882601455df05437",
+        "name": "",
+        "group": "5552fc151fea2732",
+        "order": 4,
+        "width": "12",
+        "height": "4",
+        "label": "Historico Temperaturas",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "dd HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "4",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "604800",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 890,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6b1f9dac498260f1",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Localizacion",
+        "func": "node.log(\"latitude: \" + msg.payload.geo.latitude);\nnode.log(\"longitude: \" + msg.payload.geo.longitude);\n\nvar data = {\n    payload: {\n        \"name\":msg.payload.containerId,\n        \"lat\": msg.payload.geo.latitude,\n        \"lon\": msg.payload.geo.longitude,\n        \"command\": {\n            \"panit\": true,\n            \"zoom\": 16\n        }\n    }\n}\nreturn data;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 380,
+        "wires": [
+            [
+                "8b0f587ffcd935fd",
+                "7bc2946b6d354b7e"
+            ]
+        ]
+    },
+    {
+        "id": "8b0f587ffcd935fd",
+        "type": "worldmap",
+        "z": "882601455df05437",
+        "name": "",
+        "lat": "",
+        "lon": "",
+        "zoom": "",
+        "layer": "EsriS",
+        "cluster": "10",
+        "maxage": "1000",
+        "usermenu": "show",
+        "layers": "show",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "false",
+        "coords": "none",
+        "showgrid": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN,HM",
+        "maplist": "EsriS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 840,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "d8ec5a6d8a388800",
+        "type": "ui_text",
+        "z": "882601455df05437",
+        "group": "5552fc151fea2732",
+        "order": 4,
+        "width": "5",
+        "height": "1",
+        "name": "",
+        "label": "Latitude",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "x": 840,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "88e1768fc67f5c5e",
+        "type": "ui_text",
+        "z": "882601455df05437",
+        "group": "5552fc151fea2732",
+        "order": 5,
+        "width": "7",
+        "height": "1",
+        "name": "",
+        "label": "Longitude",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "x": 840,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "115418fa6b52adb9",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Longitud",
+        "func": "msg.payload = msg.payload.geo.longitude;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 260,
+        "wires": [
+            [
+                "88e1768fc67f5c5e"
+            ]
+        ]
+    },
+    {
+        "id": "8d0cf137b0c6445e",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Latitud",
+        "func": "msg.payload=msg.payload.geo.latitude;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 320,
+        "wires": [
+            [
+                "d8ec5a6d8a388800"
+            ]
+        ]
+    },
+    {
+        "id": "5ac952127886abc0",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Actualización BD ProyectoIoT",
+        "func": "var container_id = msg.payload.containerId;\nvar temperature = msg.payload.temperature;\nvar humidity = msg.payload.humidity;\nvar last_update = msg.payload.timestamp;\nvar latitude = msg.payload.geo.latitude;\nvar longitude = msg.payload.geo.longitude;\nvar status = msg.payload.status;\n\nvar sql = \"INSERT INTO Status VALUES (0,\";\nsql += container_id + \",\";\nsql += temperature + \",\";\nsql += humidity + \",\";\nsql += latitude + \",\";\nsql += longitude + \",\";\nsql += \"'\" + last_update + \"',\";\nsql += \"'\" + status + \"') \";\nsql += \"ON DUPLICATE KEY UPDATE \";\nsql += \"temperature = \" + temperature + \",\";\nsql += \"humidity = \" + humidity + \",\";\nsql += \"latitude = \" + latitude + \",\";\nsql += \"longitude = \" + longitude + \",\";\nsql += \"last_update = '\" + last_update + \"',\";\nsql += \"status = '\" + status + \"';\"\n\nvar query = {\n    \"topic\": sql\n}\n\nreturn query;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 500,
+        "wires": [
+            [
+                "7cf292d3c910b607"
+            ]
+        ]
+    },
+    {
+        "id": "03e4f7f89a45c3b0",
+        "type": "debug",
+        "z": "882601455df05437",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5b38fe2af8b76423",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "",
+        "func": "var container_id = msg.payload.containerId;\n\nsql = \"SELECT COUNT (container_id) AS NUMS FROM \";\nsql += \"(SELECT container_id FROM Status \";\nsql += \"WHERE container_id = \" + container_id + \") AS T;\";\n\nvar query = {\n    \"topic\": sql\n}\n\nreturn query;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 560,
+        "wires": [
+            [
+                "7cf292d3c910b607"
+            ]
+        ]
+    },
+    {
+        "id": "7cf292d3c910b607",
+        "type": "mysql",
+        "z": "882601455df05437",
+        "mydb": "4831da3ae60b82e8",
+        "name": "",
+        "x": 890,
+        "y": 540,
+        "wires": [
+            [
+                "03e4f7f89a45c3b0"
+            ]
+        ]
+    },
+    {
+        "id": "5b250db73e24f2e5",
+        "type": "debug",
+        "z": "882601455df05437",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "f60dc2b25c96826e",
+        "type": "mysql",
+        "z": "882601455df05437",
+        "mydb": "f3fdc02d57b84f8d",
+        "name": "",
+        "x": 890,
+        "y": 660,
+        "wires": [
+            [
+                "5b250db73e24f2e5"
+            ]
+        ]
+    },
+    {
+        "id": "8acdfa588589304e",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "Actualización BD GraficaIoT",
+        "func": "var container_id = msg.payload.containerId;\nvar temperature = msg.payload.temperature;\nvar humidity = msg.payload.humidity;\nvar last_update = msg.payload.timestamp;\nvar latitude = msg.payload.geo.latitude;\nvar longitude = msg.payload.geo.longitude;\n\nvar sql = \"INSERT INTO Graficacion VALUES (0,\";\nsql += container_id + \",\";\nsql += temperature + \",\";\nsql += humidity + \",\";\nsql += latitude + \",\";\nsql += longitude + \",\";\nsql += \"'\" + last_update + \"');\";\n//var sql = \"INSERT INTO Graficacion VALUES (0,\";\n//sql += container_id + \",\";\n//sql += temperature + \",\";\n//sql += humidity + \",\";\n//sql += latitude + \",\";\n//sql += longitude + \",\";\n//sql += \"'\" + last_update + \"',\";\n\nvar query = {\n    \"topic\": sql\n}\n\nreturn query;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 620,
+        "wires": [
+            [
+                "f60dc2b25c96826e"
+            ]
+        ]
+    },
+    {
+        "id": "af2950eda6ecf9cc",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "",
+        "func": "var container_id = msg.payload.containerId;\n\nsql = \"SELECT COUNT (container_id) AS NUMS FROM \";\nsql += \"(SELECT container_id FROM Graficacion \";\nsql += \"WHERE container_id = \" + container_id + \") AS T;\";\n\nvar query = {\n    \"topic\": sql\n}\n\nreturn query;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 680,
+        "wires": [
+            [
+                "f60dc2b25c96826e"
+            ]
+        ]
+    },
+    {
+        "id": "7bc2946b6d354b7e",
+        "type": "debug",
+        "z": "882601455df05437",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "bf6a5fa8f5f82c7b",
+        "type": "mqtt in",
+        "z": "882601455df05437",
+        "name": "",
+        "topic": "capstone/team15/command",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "69cefbb904fa3887",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "860f995679064ff5",
+        "type": "mqtt in",
+        "z": "882601455df05437",
+        "name": "",
+        "topic": "capstone/team15/temperature",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "69cefbb904fa3887",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 420,
+        "wires": [
+            [
+                "cb84232411f25cee"
+            ]
+        ]
+    },
+    {
+        "id": "cb84232411f25cee",
+        "type": "json",
+        "z": "882601455df05437",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "9ec941d0a7ac68c3",
+                "d6c9c5419f03dd9c",
+                "a7a7673af60e8b25",
+                "18d923918cb9e2f2",
+                "115418fa6b52adb9",
+                "8d0cf137b0c6445e",
+                "6b1f9dac498260f1",
+                "79e99f5542d522a0",
+                "5ac952127886abc0",
+                "5b38fe2af8b76423",
+                "8acdfa588589304e",
+                "af2950eda6ecf9cc"
+            ]
+        ]
+    },
+    {
+        "id": "9ec941d0a7ac68c3",
+        "type": "function",
+        "z": "882601455df05437",
+        "name": "ID contenedor",
+        "func": "msg.payload = msg.payload.containerId;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 20,
+        "wires": [
+            [
+                "93c905ee9ba796f2"
+            ]
+        ]
+    },
+    {
+        "id": "93c905ee9ba796f2",
+        "type": "ui_text",
+        "z": "882601455df05437",
+        "group": "5552fc151fea2732",
+        "order": 1,
+        "width": "3",
+        "height": "4",
+        "name": "",
+        "label": "ID Container",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 850,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "79e99f5542d522a0",
+        "type": "debug",
+        "z": "882601455df05437",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "5552fc151fea2732",
+        "type": "ui_group",
+        "name": "History",
+        "tab": "588cf0eb0c84ee39",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "4831da3ae60b82e8",
+        "type": "MySQLdatabase",
+        "name": "ProyectoIoT",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "ProyectoIoT",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "f3fdc02d57b84f8d",
+        "type": "MySQLdatabase",
+        "name": "GraficaIoT",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "GraficaIoT",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "69cefbb904fa3887",
+        "type": "mqtt-broker",
+        "name": "HIVEMQ",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "cliente1121",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "588cf0eb0c84ee39",
+        "type": "ui_tab",
+        "name": "ProyectoIoT",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
