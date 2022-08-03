@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from locale import normalize
 from comm import broker
 from sensors import dht11, gps
 from db import db
@@ -98,15 +99,35 @@ if __name__ == "__main__":
 		command ['alarm'] = 'on'
 		data ['status'] = 'failed'
 	
+	db_filepath = os.path.join (os.path.dirname (__file__), 'data', DB_FILENAME)
+
 	try:
 		mqtt = broker.MQTT (MQTT_CLIENT, MQTT_HOST, MQTT_PORT)
-		#send commnd 
+		#send data & commnd 
 		mqtt.publish (MQTT_TOPIC_DATA, json.dumps (data))
 		time.sleep (0.4)
 		mqtt.publish (MQTT_TOPIC_COMMAND, json.dumps (command))
+
+		#verify if exist any data storage locally, if so, send it
+		persistance = db.Persistance (db_filepath)
+		if persistance.num_rows () > 0:
+			pending = persistance.get_data ()
+
+			#normalize status for data stored
+			for item in pending:
+				if item ['temperature'] < TEMP_MIN or item ['temperature'] > TEMP_MAX:
+					item ['status'] = 'failed'
+
+			#sending pending data 
+			#try:
+			#	[mqtt.publish (MQTT_TOPIC_DATA, json.dumps (item)) for item in pending]
+			#	persistance.remove ()
+			#except:
+			#	pass
+
+			persistance.close ()
 	except Exception as e:
 		#if data wasn't sent to broker it is storage into local db
-		db_filepath = os.path.join (os.path.dirname (__file__), 'data', DB_FILENAME)
 		persistance = db.Persistance (db_filepath)
 		persistance.insert (data)
 		persistance.close ()
