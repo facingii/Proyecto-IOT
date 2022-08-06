@@ -19,7 +19,7 @@
 
 //Datos de WiFi
 const char* ssid = "MANILAN";  // Aquí debes poner el nombre de tu red
-const char* password = "XXXXXXXX.";  // Aquí debes poner la contraseña de tu red
+const char* password = "XXXXXXXXX";  // Aquí debes poner la contraseña de tu red
 const char* TOPIC_COMMAND = "capstone/team15/command";
 const char* CONTAINER_ID = "1001";
 const IPAddress server(18,195,236,18);
